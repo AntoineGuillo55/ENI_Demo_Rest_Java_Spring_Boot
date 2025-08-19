@@ -7,5 +7,6 @@ import java.util.List;
 public class ServiceResponse<T> {
 
     public String code;
+    public String message;
     public T data;
 }
