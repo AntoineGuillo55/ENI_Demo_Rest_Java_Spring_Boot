@@ -1,12 +1,11 @@
 package com.fr.eni.demo_rest.api;
 
 import com.fr.eni.demo_rest.bo.Person;
-import com.fr.eni.demo_rest.dao.mongo.PersonMongoRepository;
+import com.fr.eni.demo_rest.dao.IDAOPerson;
 import com.fr.eni.demo_rest.service.PersonService;
 import com.fr.eni.demo_rest.service.PersonServiceV2;
 import com.fr.eni.demo_rest.service.ServiceResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,13 +18,13 @@ public class DemoRestController {
 
     private final PersonService personService;
     private final PersonServiceV2 personServiceV2;
-    private final PersonMongoRepository personMongoRepository;
+    private final IDAOPerson daoPerson;
 
-    public DemoRestController(PersonService personService, PersonServiceV2 personServiceV2, PersonMongoRepository personMongoRepository) {
+    public DemoRestController(PersonService personService, PersonServiceV2 personServiceV2, IDAOPerson daoPerson) {
 
         this.personService = personService;
         this.personServiceV2 = personServiceV2;
-        this.personMongoRepository = personMongoRepository;
+        this.daoPerson = daoPerson;
     }
 
     @GetMapping("api/demo")
@@ -58,7 +57,7 @@ public class DemoRestController {
     @GetMapping("api/test")
     public List<Person> testMongo() {
 
-        List<Person> persons = personMongoRepository.findAll();
+        List<Person> persons = daoPerson.selectAll();
 
         return persons;
     }

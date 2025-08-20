@@ -1,18 +1,20 @@
-package com.fr.eni.demo_rest.dao;
+package com.fr.eni.demo_rest.dao.mock;
 
 import com.fr.eni.demo_rest.bo.Person;
+import com.fr.eni.demo_rest.dao.IDAOPerson;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class DAOPerson {
+@Profile("mock")
+public class DAOPersonMock implements IDAOPerson {
 
     public List<Person> DB_Persons;
 
-    public DAOPerson() {
+    public DAOPersonMock() {
 
         DB_Persons = new ArrayList<>();
 
@@ -25,6 +27,7 @@ public class DAOPerson {
         }
     }
 
+    @Override
     public List<Person> selectAll() {
         return DB_Persons;
     }

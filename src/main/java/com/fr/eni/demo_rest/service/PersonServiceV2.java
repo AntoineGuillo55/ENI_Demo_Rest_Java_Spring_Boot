@@ -1,7 +1,7 @@
 package com.fr.eni.demo_rest.service;
 
 import com.fr.eni.demo_rest.bo.Person;
-import com.fr.eni.demo_rest.dao.DAOPerson;
+import com.fr.eni.demo_rest.dao.IDAOPerson;
 import com.fr.eni.demo_rest.locale.LocaleHelper;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +12,11 @@ import java.util.List;
 public class PersonServiceV2 {
 
 
-    private final DAOPerson daoPerson;
+    private final IDAOPerson daoPerson;
 
     private final LocaleHelper localeHelper;
 
-    public PersonServiceV2(DAOPerson daoPerson,  LocaleHelper localeHelper) {
+    public PersonServiceV2(IDAOPerson daoPerson, LocaleHelper localeHelper) {
         this.daoPerson = daoPerson;
         this.localeHelper = localeHelper;
     }
