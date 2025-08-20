@@ -3,26 +3,23 @@ package com.fr.eni.demo_rest.service;
 import com.fr.eni.demo_rest.bo.Person;
 import com.fr.eni.demo_rest.dao.DAOPerson;
 import com.fr.eni.demo_rest.locale.LocaleHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
+
 
 @Service
 public class PersonServiceV2 {
 
-    @Autowired
-    private DAOPerson daoPerson;
 
-    @Autowired
-    MessageSource messageSource;
+    private final DAOPerson daoPerson;
 
-    @Autowired
-    LocaleHelper localeHelper;
+    private final LocaleHelper localeHelper;
 
+    public PersonServiceV2(DAOPerson daoPerson,  LocaleHelper localeHelper) {
+        this.daoPerson = daoPerson;
+        this.localeHelper = localeHelper;
+    }
 
     public ServiceResponse<List<Person>> displayOffAgePersons() {
 
@@ -30,8 +27,6 @@ public class PersonServiceV2 {
 
         List<Person> results =  daoPerson.selectAll();
 
-//        String message = messageSource.getMessage("DisplayOffAgePersons_200_Success", null, LocaleContextHolder.getLocale());
-//        String message2 = messageSource.getMessage("DisplayOffAgePersons_200_Success", null, Locale.ENGLISH);
         String message3 = localeHelper.i18n("DisplayOffAgePersons_200_Success");
         System.out.println("Test traduction");
 

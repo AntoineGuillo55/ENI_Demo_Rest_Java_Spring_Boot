@@ -2,7 +2,6 @@ package com.fr.eni.demo_rest.service;
 
 import com.fr.eni.demo_rest.bo.Person;
 import com.fr.eni.demo_rest.dao.DAOPerson;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +9,12 @@ import java.util.List;
 @Service
 public class PersonService {
 
-    @Autowired
-    private DAOPerson daoPerson;
+
+    private final DAOPerson daoPerson;
+
+    public PersonService(DAOPerson daoPerson) {
+        this.daoPerson = daoPerson;
+    }
 
     /**
      * @deprecated displayOffAgePerson est dépréciée, veuillez utiliser {@link PersonServiceV2#displayOffAgePersons()}

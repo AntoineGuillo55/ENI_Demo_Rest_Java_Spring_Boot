@@ -1,6 +1,7 @@
 package com.fr.eni.demo_rest.api;
 
 import com.fr.eni.demo_rest.bo.Person;
+import com.fr.eni.demo_rest.dao.mongo.PersonMongoRepository;
 import com.fr.eni.demo_rest.service.PersonService;
 import com.fr.eni.demo_rest.service.PersonServiceV2;
 import com.fr.eni.demo_rest.service.ServiceResponse;
@@ -15,11 +16,17 @@ import java.util.List;
 @RestController
 public class DemoRestController {
 
-    @Autowired
-    private PersonService personService;
 
-    @Autowired
-    private PersonServiceV2 personServiceV2;
+    private final PersonService personService;
+    private final PersonServiceV2 personServiceV2;
+    private final PersonMongoRepository personMongoRepository;
+
+    public DemoRestController(PersonService personService, PersonServiceV2 personServiceV2, PersonMongoRepository personMongoRepository) {
+
+        this.personService = personService;
+        this.personServiceV2 = personServiceV2;
+        this.personMongoRepository = personMongoRepository;
+    }
 
     @GetMapping("api/demo")
     Person ijzkehfzefsjf(){
@@ -46,5 +53,13 @@ public class DemoRestController {
         //Retourner le json du service
         return serviceResponse;
 
+    }
+
+    @GetMapping("api/test")
+    public List<Person> testMongo() {
+
+        List<Person> persons = personMongoRepository.findAll();
+
+        return persons;
     }
 }
