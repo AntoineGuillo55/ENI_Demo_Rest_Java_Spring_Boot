@@ -1,0 +1,100 @@
+package com.fr.eni.demo_rest.service;
+
+import com.fr.eni.demo_rest.bo.Person;
+import com.fr.eni.demo_rest.dao.IDAOPerson;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Date;
+
+@Component
+public class AuthService {
+
+    private final IDAOPerson daoPerson;
+
+    public AuthService(IDAOPerson daoPerson) {
+        this.daoPerson = daoPerson;
+    }
+
+    @Value("${app.jwt.secret}")
+    private String SECRET_KEY;
+
+    private Key getSecretKey() {
+
+        // Convertir un string en base64
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+
+        // Convertir une base 64 en Key
+        Key key = Keys.hmacShaKeyFor(keyBytes);
+
+        return key;
+    }
+
+    public ServiceResponse<String> createToken(String email, String password) {
+
+        Person loggedPerson = daoPerson.selectPersonByLogin(email, password);
+
+        if(loggedPerson == null){
+            return ServiceHelper.buildResponse("703", "Aucun utilisateur connecté", null);
+        }
+
+        Date tokenLifetime = new Date(System.currentTimeMillis() + ((1000 * 60 * 60) * 1));
+
+        // Le code pour générer un token
+        String token = Jwts.builder()
+                .subject("test@gmail.com")
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(tokenLifetime)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+        return ServiceHelper.buildResponse("202", "Token généré avec succès", token);
+    }
+
+    public ServiceResponse<String> checkToken(String token) {
+
+        //Error: 1 - Si empty
+        if(token.isEmpty()) {
+
+            ServiceHelper.buildResponse("703", "Erreur: Token vide", null);
+        }
+
+        // ATTENTION SELON LE CAS LE TOKEN EST SUFFIXE D'UN DISCRIMINANT
+        // ex Bearer montoken
+        // je dois ignorer les 7 premiers caractère
+        token = token.substring(7);
+
+        try {
+            //Outil pour déchiffrer le token
+            JwtParser jwtParser = Jwts.parser().setSigningKey(getSecretKey()).build();
+            //Récupérer les claims de mon token (=> toutes les infos)
+            Claims claims = jwtParser.parseClaimsJws(token).getBody();
+
+            //Récupérer la date d'expiration
+            //1 : Version abstraite (couplage faible)
+            //Function<Claims, Date> expirationFunction = Claims::getExpiration;
+            //Date expirationDate = expirationFunction.apply(claims);
+            //2 : Version explicite (couplage fort)
+            Date expirationDate = claims.getExpiration();
+
+        } catch (Exception ex) {
+
+            if(ex instanceof ExpiredJwtException) {
+                return ServiceHelper.buildResponse("704", "Erreur: Token expiré", null);
+            }
+
+            if(ex instanceof MalformedJwtException) {
+                return ServiceHelper.buildResponse("705", "Erreur: Token malformé", null);
+            }
+
+            return ServiceHelper.buildResponse("706", "Erreur inconnue", null);
+        }
+
+
+        return ServiceHelper.buildResponse("706", "Token valide", null);
+    }
+}

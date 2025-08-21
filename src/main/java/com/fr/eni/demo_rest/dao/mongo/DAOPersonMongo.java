@@ -21,4 +21,9 @@ public class DAOPersonMongo implements IDAOPerson {
     public List<Person> selectAll() {
         return repository.findAll();
     }
+
+    @Override
+    public Person selectPersonByLogin(String email, String password) {
+        return repository.findByEmailAndPassword(email, password);
+    }
 }

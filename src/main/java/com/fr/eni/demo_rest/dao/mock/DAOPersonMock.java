@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Profile("mock")
@@ -20,8 +21,11 @@ public class DAOPersonMock implements IDAOPerson {
 
         for (int i = 0; i < 10; i++) {
             Person p = new Person();
-            p.pseudo = String.format("pseudo-%d", i);
+            p.id = String.valueOf(i + 1);
+            p.pseudo = String.format("pseudo-%d", i + 1);
             p.age = 15 + i;
+            p.email = String.format("email-%d@gmail.com", i + 1);
+            p.password = String.format("password-%d", i + 1);
 
             DB_Persons.add(p);
         }
@@ -30,5 +34,13 @@ public class DAOPersonMock implements IDAOPerson {
     @Override
     public List<Person> selectAll() {
         return DB_Persons;
+    }
+
+    @Override
+    public Person selectPersonByLogin(String email, String password) {
+
+        Optional<Person> foundPerson = DB_Persons.stream().filter(person -> person.email.equals(email) && person.password.equals(password)).findFirst();
+
+        return foundPerson.orElse(null);
     }
 }

@@ -7,9 +7,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Person {
 
     @Id
-    private String id;
+    public String id;
 
     public String pseudo;
 
     public int age;
+
+    public String email;
+
+    public String password;
 }
