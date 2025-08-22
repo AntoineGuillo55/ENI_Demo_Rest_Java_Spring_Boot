@@ -55,12 +55,12 @@ public class AuthService {
         return ServiceHelper.buildResponse("202", "Token généré avec succès", token);
     }
 
-    public ServiceResponse<String> checkToken(String token) {
+    public ServiceResponse<Boolean> checkToken(String token) {
 
         //Error: 1 - Si empty
         if(token.isEmpty()) {
 
-            ServiceHelper.buildResponse("703", "Erreur: Token vide", null);
+            ServiceHelper.buildResponse("704", "Erreur: Token vide", false);
         }
 
         // ATTENTION SELON LE CAS LE TOKEN EST SUFFIXE D'UN DISCRIMINANT
@@ -84,17 +84,17 @@ public class AuthService {
         } catch (Exception ex) {
 
             if(ex instanceof ExpiredJwtException) {
-                return ServiceHelper.buildResponse("704", "Erreur: Token expiré", null);
+                return ServiceHelper.buildResponse("704", "Erreur: Token expiré", false);
             }
 
             if(ex instanceof MalformedJwtException) {
-                return ServiceHelper.buildResponse("705", "Erreur: Token malformé", null);
+                return ServiceHelper.buildResponse("704", "Erreur: Token malformé", false);
             }
 
-            return ServiceHelper.buildResponse("706", "Erreur inconnue", null);
+            return ServiceHelper.buildResponse("704", "Erreur inconnue", false);
         }
 
 
-        return ServiceHelper.buildResponse("706", "Token valide", null);
+        return ServiceHelper.buildResponse("202", "Token valide", true);
     }
 }

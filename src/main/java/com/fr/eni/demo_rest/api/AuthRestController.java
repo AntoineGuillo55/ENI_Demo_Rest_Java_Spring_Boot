@@ -1,13 +1,7 @@
 package com.fr.eni.demo_rest.api;
 
 import com.fr.eni.demo_rest.service.AuthService;
-import io.jsonwebtoken.*;
 import org.springframework.web.bind.annotation.*;
-
-class LoginRequest {
-    public String email;
-    public String password;
-}
 
 @RestController
 public class AuthRestController {
